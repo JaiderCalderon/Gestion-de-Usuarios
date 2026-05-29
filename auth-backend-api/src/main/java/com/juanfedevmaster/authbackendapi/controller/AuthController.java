@@ -4,8 +4,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.juanfedevmaster.authbackendapi.entity.dto.AuthRequest;
+import com.juanfedevmaster.authbackendapi.entity.dto.AuthResponse;
 import com.juanfedevmaster.authbackendapi.entity.dto.RegisterUserRequest;
-import com.juanfedevmaster.authbackendapi.services.AuthService;
+import com.juanfedevmaster.authbackendapi.services.IAuthService;
+
+import jakarta.validation.Valid;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,7 +18,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,40 +29,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Tag(name = "Authentication", description = "Register and login endpoints — no token required")
 public class AuthController {
 
-    private final AuthService authService;
+    private final IAuthService authService;
 
     @PostMapping("/register")
     @Operation(summary = "Register a new user",
         description = "Action to register a new user into the aplication.",
         responses = {
-            @ApiResponse(responseCode = "201", description = "User created", content = @Content(schema = @Schema(implementation = Boolean.class))),
+            @ApiResponse(responseCode = "201", description = "User created", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
             @ApiResponse(responseCode =  "500", description = "Internal server Error.")
         }   
     )
-    public ResponseEntity<Boolean> postMethodRegister(@RequestBody RegisterUserRequest userToRegister) {
-        try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(userToRegister));
-        }catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
-        }
-        
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterUserRequest userToRegister) {
+        boolean created = authService.register(userToRegister);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(created, "User created"));
     }
 
     @PostMapping("/login")
     @Operation(summary = "login user with password",
         description = "Action to login a user into the aplication.",
         responses = {
-            @ApiResponse(responseCode = "200", description = "User authenticated", content = @Content(schema = @Schema(implementation = Boolean.class))),
+            @ApiResponse(responseCode = "200", description = "User authenticated", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
             @ApiResponse(responseCode =  "500", description = "Internal server Error.")
         }   
     )
-    public ResponseEntity<Boolean> postMethodLogin(@RequestBody AuthRequest authRequest) {
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(authService.login(authRequest));
-        }catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
-        }
-        
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
+        boolean ok = authService.login(authRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(ok, "Authenticated"));
     }
     
 }
