@@ -1,0 +1,131 @@
+/* ===== Base para Login ===== */
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  color: var(--dark);
+}
+
+/* ===== Auth Card ===== */
+.auth-card {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  box-shadow: var(--card-shadow);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 440px;
+  animation: slideUp 0.4s ease;
+}
+
+.auth-card .brand-icon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+}
+
+.auth-card .brand-icon i {
+  font-size: 1.75rem;
+  color: #ffffff;
+}
+
+.auth-card h2 {
+  font-weight: 700;
+  color: var(--dark);
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+.auth-card .subtitle {
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+
+/* ===== Elementos del Formulario de Login ===== */
+.input-group .form-control {
+  border-right: none;
+}
+
+.input-group .btn-toggle-pwd {
+  border: 1.5px solid #e5e7eb;
+  border-left: none;
+  border-radius: 0 0.6rem 0.6rem 0;
+  background: #f9fafb;
+  color: #6b7280;
+  transition: color 0.2s;
+}
+
+.input-group .btn-toggle-pwd:hover {
+  color: var(--primary);
+}
+
+.input-group:focus-within .btn-toggle-pwd {
+  border-color: var(--primary);
+}
+
+/* ===== Divider ===== */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #9ca3af;
+  font-size: 0.8rem;
+  margin: 1.25rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+/* ===== Link ===== */
+.auth-link {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* ===== Alert ===== */
+.alert-auth {
+  border-radius: 0.6rem;
+  font-size: 0.875rem;
+  padding: 0.65rem 0.9rem;
+  display: none;
+}
+
+/* ===== Spinner ===== */
+.btn-spinner {
+  display: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 0.5rem;
+}
+
+/* ===== Responsive Login ===== */
+@media (max-width: 480px) {
+  .auth-card {
+    margin: 1rem;
+    padding: 1.75rem 1.25rem;
+  }
+}
