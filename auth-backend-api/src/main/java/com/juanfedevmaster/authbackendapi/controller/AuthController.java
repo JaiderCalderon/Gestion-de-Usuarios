@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.juanfedevmaster.authbackendapi.entity.dto.AuthRequest;
 import com.juanfedevmaster.authbackendapi.entity.dto.AuthResponse;
 import com.juanfedevmaster.authbackendapi.entity.dto.RegisterUserRequest;
-import com.juanfedevmaster.authbackendapi.services.IAuthService;
+import com.juanfedevmaster.authbackendapi.services.IAuthenticationService;
+import com.juanfedevmaster.authbackendapi.services.IRegistrationService;
 
 import jakarta.validation.Valid;
 
@@ -29,8 +30,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Tag(name = "Authentication", description = "Register and login endpoints — no token required")
 public class AuthController {
 
-    private final IAuthService authService;
-
+    private final IAuthenticationService authenticationService;
+    private final IRegistrationService registrationService;
     @PostMapping("/register")
     @Operation(summary = "Register a new user",
         description = "Action to register a new user into the aplication.",
@@ -40,8 +41,8 @@ public class AuthController {
         }   
     )
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterUserRequest userToRegister) {
-        boolean created = authService.register(userToRegister);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(created, "User created"));
+    boolean created = registrationService.register(userToRegister);
+    return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(created, "User created"));
     }
 
     @PostMapping("/login")
@@ -53,7 +54,7 @@ public class AuthController {
         }   
     )
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
-        boolean ok = authService.login(authRequest);
+        boolean ok = authenticationService.login(authRequest);
         return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(ok, "Authenticated"));
     }
     
