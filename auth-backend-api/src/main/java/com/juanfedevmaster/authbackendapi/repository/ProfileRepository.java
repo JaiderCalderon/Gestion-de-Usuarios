@@ -7,7 +7,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, Integer> {
-    Optional<Profile> findByUser_Id(Integer userId);
-    boolean existsByUser_Id(Integer userId);
+    Optional<Profile> findByUser_Cedula(Long cedula);
+    boolean existsByUser_Cedula(Long cedula);
     boolean existsByPhone(String phone);
 }

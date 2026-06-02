@@ -1,8 +1,8 @@
 package com.juanfedevmaster.authbackendapi.services;
 
 import com.juanfedevmaster.authbackendapi.entity.dto.AuthRequest;
+import com.juanfedevmaster.authbackendapi.entity.dto.AuthResponse;
 
 public interface IAuthenticationService {
-    boolean login(AuthRequest authRequest);
-    
+    AuthResponse login(AuthRequest authRequest);
 }

@@ -54,7 +54,7 @@ public class ProfileController {
             @ApiResponse(responseCode = "404", description = "Profile not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
         })
-    public ResponseEntity<ProfileResponse> getByUserId(@PathVariable Integer userId) {
+    public ResponseEntity<ProfileResponse> getByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(profileService.getProfileByUserId(userId));
     }
 
