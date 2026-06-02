@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi cuenta · JAS</title>
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <!-- Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="stylesheet" href="css/user.css" />
+</head>
+<body class="dashboard-body user-body">
+
+  <!-- Navbar -->
+  <nav class="navbar dashboard-navbar px-3 px-md-4">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <i class="bi bi-boxes me-2"></i>JAS
+    </a>
+    <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-nav-action active" data-bs-toggle="modal" data-bs-target="#profileModal">
+        <i class="bi bi-person-circle me-1"></i>Profile
+      </button>
+      <button class="btn btn-nav-icon" title="Notificaciones">
+        <i class="bi bi-bell"></i>
+      </button>
+      <span class="nav-avatar" id="navAvatar">JG</span>
+    </div>
+  </nav>
+
+  <!-- Contenido -->
+  <section class="container user-container py-4">
+
+    <!-- Bienvenida -->
+    <div class="mb-4">
+      <h1 class="welcome-title mb-1">
+        Bienvenido, <span id="userName">Juan García</span> 👋
+      </h1>
+      <p class="text-muted mb-0 welcome-sub">
+        <span id="todayDate">—</span> · Rol: <span id="userRole">usuario</span>
+      </p>
+    </div>
+
+    <!-- Tarjetas resumen -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-4">
+        <div class="card summary-card p-4 text-center">
+          <div class="summary-value" id="memberSince">Mar 25</div>
+          <div class="summary-label">Miembro desde</div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card summary-card p-4 text-center">
+          <div class="summary-value" id="lastAccess">Hoy</div>
+          <div class="summary-label">Último acceso</div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card summary-card p-4 text-center">
+          <div class="summary-value text-success">Activo</div>
+          <div class="summary-label">Estado</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información de la cuenta -->
+    <div class="card info-card p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0">Información de la cuenta</h6>
+        <button class="btn btn-link-edit p-0" data-bs-toggle="modal" data-bs-target="#profileModal">
+          <i class="bi bi-pencil me-1"></i>Editar
+        </button>
+      </div>
+      <div class="account-row">
+        <span class="text-muted">Nombre</span>
+        <strong id="accountName">Juan García</strong>
+      </div>
+      <div class="account-row">
+        <span class="text-muted">Correo</span>
+        <strong id="accountEmail">juan@email.com</strong>
+      </div>
+      <div class="account-row">
+        <span class="text-muted">Rol</span>
+        <span class="badge-user">usuario</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal: editar perfil -->
+  <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content user-modal">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-pencil me-2 text-primary"></i>Editar perfil
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="profileForm" novalidate>
+            <div class="mb-3">
+              <label class="form-label">Nombre completo</label>
+              <input type="text" id="editName" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Correo electrónico</label>
+              <input type="email" id="editEmail" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Nueva contraseña (opcional)</label>
+              <input type="password" id="editPassword" class="form-control" placeholder="••••••••" />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer border-0 d-flex justify-content-between">
+          <button type="button" class="btn btn-danger-outline" id="deleteAccountBtn">
+            <i class="bi bi-trash me-1"></i>Dar de baja
+          </button>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary-custom btn-save" id="saveProfileBtn">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: confirmar dar de baja -->
+  <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content user-modal">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold text-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>Dar de baja la cuenta
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">¿Estás seguro de eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteAccount">Eliminar mi cuenta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center text-muted py-4" style="font-size:.8rem;">
+    &copy; 2026 JAS
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // requireAuth();
+
+    // Datos de ejemplo (luego vienen de la sesión / API)
+    const user = {
+      name:  'Juan García',
+      email: 'juan@email.com',
+      role:  'usuario',
+      memberSince: 'Mar 25'
+    };
+
+    const initials = (n) => n.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+    // Pintar datos
+    document.getElementById('userName').textContent     = user.name;
+    document.getElementById('userRole').textContent     = user.role;
+    document.getElementById('accountName').textContent  = user.name;
+    document.getElementById('accountEmail').textContent = user.email;
+    document.getElementById('memberSince').textContent  = user.memberSince;
+    document.getElementById('navAvatar').textContent    = initials(user.name);
+
+    // Fecha de hoy
+    document.getElementById('todayDate').textContent =
+      new Date().toLocaleDateString('es-CO', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+    // Precargar modal al abrir
+    document.getElementById('profileModal').addEventListener('show.bs.modal', () => {
+      document.getElementById('editName').value     = user.name;
+      document.getElementById('editEmail').value    = user.email;
+      document.getElementById('editPassword').value = '';
+    });
+
+    // Guardar perfil (mock)
+    document.getElementById('saveProfileBtn').onclick = () => {
+      user.name  = document.getElementById('editName').value.trim();
+      user.email = document.getElementById('editEmail').value.trim();
+      document.getElementById('userName').textContent     = user.name;
+      document.getElementById('accountName').textContent  = user.name;
+      document.getElementById('accountEmail').textContent = user.email;
+      document.getElementById('navAvatar').textContent    = initials(user.name);
+      bootstrap.Modal.getInstance(document.getElementById('profileModal')).hide();
+    };
+
+    // Dar de baja
+    document.getElementById('deleteAccountBtn').onclick = () => {
+      bootstrap.Modal.getInstance(document.getElementById('profileModal')).hide();
+      new bootstrap.Modal(document.getElementById('deleteAccountModal')).show();
+    };
+    document.getElementById('confirmDeleteAccount').onclick = () => {
+      alert('Cuenta eliminada.');
+      bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal')).hide();
+    };
+  </script>
+</body>
+</html>

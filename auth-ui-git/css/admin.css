@@ -1,0 +1,134 @@
+/* ===== Dashboard Base ===== */
+body.dashboard-body {
+  background: #f3f4f6;
+  display: block;
+  align-items: unset;
+  justify-content: unset;
+}
+
+/* ===== Navbar ===== */
+.dashboard-navbar {
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  box-shadow: 0 2px 12px rgba(26, 26, 46, 0.18);
+}
+
+.dashboard-navbar .navbar-brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #fff !important;
+  letter-spacing: 0.02em;
+}
+
+.dashboard-navbar .nav-user {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 0.9rem;
+}
+
+.dashboard-navbar .btn-logout {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.dashboard-navbar .btn-logout:hover {
+  background: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+/* ===== Hero Banner ===== */
+.welcome-hero {
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+  color: #fff;
+  padding: 3.5rem 1.5rem 5rem;
+  text-align: center;
+}
+
+.welcome-hero h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+.welcome-hero p {
+  font-size: 1.05rem;
+  opacity: 0.88;
+}
+
+/* ===== Content Sections & Cards ===== */
+.cards-section {
+  margin-top: -3rem;
+  padding: 0 1rem 3rem;
+}
+
+.stat-card {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(26, 26, 46, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(26, 26, 46, 0.14);
+}
+
+.stat-card .card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.info-card {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(26, 26, 46, 0.08);
+}
+
+/* Variantes suaves de iconos en el mismo rango morado */
+.card-icon.icon-primary { background: var(--primary-soft); color: var(--primary); }
+.card-icon.icon-secondary { background: #ead7f5; color: var(--secondary); }
+.card-icon.icon-info { background: #d7caee; color: var(--info); }
+.card-icon.icon-success { background: #c3e6cb; color: #1e7e34; }
+.card-icon.icon-warning { background: #ffeeba; color: #d39e00; }
+.card-icon.icon-danger { background: #f5c6cb; color: #bd2130; }
+
+/* ===== Badges de Rol ===== */
+.info-card .badge-role {
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+  font-size: 0.8rem;
+  padding: 0.35em 0.75em;
+  border-radius: 0.4rem;
+}
+
+.badge-admin {
+  background: #f5c6cb;
+  color: #bd2130;
+  font-weight: 600;
+  padding: 0.3em 0.7em;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+}
+
+.badge-user {
+  background: var(--primary-soft);
+  color: var(--primary-text-soft);
+  font-weight: 600;
+  padding: 0.3em 0.7em;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+}
+
+/* ===== Responsive Dashboard ===== */
+@media (max-width: 480px) {
+  .welcome-hero h1 {
+    font-size: 1.6rem;
+  }
+}

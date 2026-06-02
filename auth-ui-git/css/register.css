@@ -1,0 +1,19 @@
+.form-hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  color: #6b7280;
+  min-height: 1rem;
+}
+
+.form-hint.text-success { color: var(--success); font-weight: 500; }
+.form-hint.text-danger  { color: var(--danger);  font-weight: 500; }
+
+.auth-card {
+  max-width: 460px;
+}
+
+body {
+  align-items: flex-start;
+  padding: 2rem 1rem;
+}
