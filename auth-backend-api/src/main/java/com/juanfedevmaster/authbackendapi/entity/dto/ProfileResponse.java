@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ProfileResponse {
     private Integer id;
-    private Integer userId;
+    private Long userId;
     private String phone;
     private String company;
     private String biography;

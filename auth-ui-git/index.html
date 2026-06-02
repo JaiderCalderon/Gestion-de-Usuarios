@@ -30,17 +30,17 @@
     <!-- Form -->
     <form id="loginForm" novalidate onsubmit="handleLogin(event)">
 
-      <!-- Username -->
+      <!-- Email -->
       <div class="mb-3">
-        <label for="loginUsername" class="form-label">
-          <i class="bi bi-person me-1 text-muted"></i>Usuario
+        <label for="loginEmail" class="form-label">
+          <i class="bi bi-envelope me-1 text-muted"></i>Correo electrónico
         </label>
         <input
-          type="text"
-          id="loginUsername"
+          type="email"
+          id="loginEmail"
           class="form-control"
-          placeholder="Ingresa tu usuario"
-          autocomplete="username"
+          placeholder="tu@email.com"
+          autocomplete="email"
           required
         />
       </div>
@@ -93,11 +93,11 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Auth logic -->
-  
+  <script src="src/main.js"></script>
   <script>
     // Redirect if already logged in
-    if (localStorage.getItem('auth_logged_in') === 'true') {
-      window.location.href = 'dashboard.html';
+    if (typeof isLoggedIn === 'function' && isLoggedIn()) {
+      redirectByRole();
     }
   </script>
 </body>

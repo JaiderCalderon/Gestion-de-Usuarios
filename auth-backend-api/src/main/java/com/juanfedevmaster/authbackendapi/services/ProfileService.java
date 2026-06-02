@@ -40,8 +40,8 @@ public class ProfileService implements IProfileService {
     }
 
     @Override
-    public ProfileResponse getProfileByUserId(Integer userId) {
-        return toResponse(profileRepository.findByUser_Id(userId)
+    public ProfileResponse getProfileByUserId(Long userId) {
+        return toResponse(profileRepository.findByUser_Cedula(userId)
                 .orElseThrow(() -> new ProfileNotFoundException("Profile not found for user id: " + userId)));
     }
 
@@ -68,7 +68,7 @@ public class ProfileService implements IProfileService {
     private ProfileResponse toResponse(Profile profile) {
         return new ProfileResponse(
                 profile.getId(),
-                profile.getUser().getId(),
+                profile.getUser().getCedula(),
                 profile.getPhone(),
                 profile.getCompany(),
                 profile.getBiography(),

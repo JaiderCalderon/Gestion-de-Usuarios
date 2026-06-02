@@ -24,7 +24,7 @@ public class UserResponse {
                 .name(user.getName())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .role(user.getRole().name())
+                .role(user.getRole() != null ? user.getRole().getName() : null)
                 .enabled(user.isEnabled())
                 .createdAt(user.getCreatedAt())
                 .lastLogin(user.getLastLogin())

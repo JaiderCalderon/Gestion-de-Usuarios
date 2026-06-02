@@ -8,7 +8,7 @@ import lombok.Data;
 public class ProfileRequest {
 
     @NotNull(message = "User id is required")
-    private Integer userId;
+    private Long userId;
 
     @Size(max = 20, message = "Phone must be at most 20 characters")
     private String phone;

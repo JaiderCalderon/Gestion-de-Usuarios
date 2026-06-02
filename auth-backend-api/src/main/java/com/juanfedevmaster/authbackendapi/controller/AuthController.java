@@ -41,8 +41,8 @@ public class AuthController {
         }   
     )
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterUserRequest userToRegister) {
-    boolean created = registrationService.register(userToRegister);
-    return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(created, "User created"));
+        AuthResponse response = registrationService.register(userToRegister);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
@@ -54,8 +54,8 @@ public class AuthController {
         }   
     )
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
-        boolean ok = authenticationService.login(authRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(ok, "Authenticated"));
+        AuthResponse response = authenticationService.login(authRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     
 }

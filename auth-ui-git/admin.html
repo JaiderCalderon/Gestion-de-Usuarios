@@ -144,33 +144,7 @@
               </tr>
             </thead>
             <tbody id="usersTableBody">
-              <tr data-email="ana@app.com">
-                <td>Ana López</td>
-                <td>ana@app.com</td>
-                <td><span class="badge-admin">admin</span></td>
-                <td class="text-end">
-                  <button class="btn btn-icon-edit" title="Editar" onclick="openEditUser('Ana López','ana@app.com','admin')"><i class="bi bi-pencil"></i></button>
-                  <button class="btn btn-icon-delete" title="Eliminar" onclick="confirmDelete('Ana López','ana@app.com')"><i class="bi bi-trash"></i></button>
-                </td>
-              </tr>
-              <tr data-email="juan@app.com">
-                <td>Juan García</td>
-                <td>juan@app.com</td>
-                <td><span class="badge-user">usuario</span></td>
-                <td class="text-end">
-                  <button class="btn btn-icon-edit" title="Editar" onclick="openEditUser('Juan García','juan@app.com','usuario')"><i class="bi bi-pencil"></i></button>
-                  <button class="btn btn-icon-delete" title="Eliminar" onclick="confirmDelete('Juan García','juan@app.com')"><i class="bi bi-trash"></i></button>
-                </td>
-              </tr>
-              <tr data-email="maria@app.com">
-                <td>María Ruiz</td>
-                <td>maria@app.com</td>
-                <td><span class="badge-user">usuario</span></td>
-                <td class="text-end">
-                  <button class="btn btn-icon-edit" title="Editar" onclick="openEditUser('María Ruiz','maria@app.com','usuario')"><i class="bi bi-pencil"></i></button>
-                  <button class="btn btn-icon-delete" title="Eliminar" onclick="confirmDelete('María Ruiz','maria@app.com')"><i class="bi bi-trash"></i></button>
-                </td>
-              </tr>
+              <!-- Filas cargadas dinámicamente desde /api/users -->
             </tbody>
           </table>
         </div>
@@ -192,9 +166,17 @@
         </div>
         <div class="modal-body">
           <form id="userForm" novalidate>
+            <div class="mb-3" id="cedulaWrap">
+              <label class="form-label">Cédula</label>
+              <input type="number" id="userCedula" class="form-control" min="1" required />
+            </div>
             <div class="mb-3">
               <label class="form-label">Nombre completo</label>
               <input type="text" id="userName" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Usuario</label>
+              <input type="text" id="userUsername" class="form-control" required />
             </div>
             <div class="mb-3">
               <label class="form-label">Correo electrónico</label>
@@ -207,15 +189,15 @@
             <div class="mb-3">
               <label class="form-label">Rol</label>
               <select id="userRole" class="form-select" required>
-                <option value="usuario">Usuario</option>
-                <option value="admin">Administrador</option>
+                <option value="USER">Usuario</option>
+                <option value="ADMIN">Administrador</option>
               </select>
             </div>
           </form>
         </div>
         <div class="modal-footer border-0">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary-custom" style="width:auto; padding:.5rem 1.25rem;">Guardar</button>
+          <button type="button" class="btn btn-primary-custom" style="width:auto; padding:.5rem 1.25rem;" id="saveUserBtn">Guardar</button>
         </div>
       </div>
     </div>
@@ -249,14 +231,57 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Auth + API logic -->
+  <script src="src/main.js"></script>
   <script>
-    requireAuth();
+    requireAdmin();
 
     const username = getUsername();
     document.getElementById('navUsername').textContent  = username;
     document.getElementById('heroUsername').textContent = username;
     document.getElementById('infoUsername').textContent = username;
     document.getElementById('loginTime').textContent    = new Date().toLocaleString('es-CO');
+
+    let users = [];          // cache de usuarios cargados
+    let editingCedula = null; // null = creando, valor = editando
+
+    const roleLabel = (r) => r === 'ADMIN' ? 'admin' : 'usuario';
+    const roleBadge = (r) => r === 'ADMIN'
+      ? '<span class="badge-admin">admin</span>'
+      : '<span class="badge-user">usuario</span>';
+
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function renderUsers() {
+      const body = document.getElementById('usersTableBody');
+      if (!users.length) {
+        body.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Sin usuarios.</td></tr>';
+        return;
+      }
+      body.innerHTML = users.map(u => `
+        <tr data-email="${escapeHtml(u.email)}">
+          <td>${escapeHtml(u.name)}</td>
+          <td>${escapeHtml(u.email)}</td>
+          <td>${roleBadge(u.role)}</td>
+          <td class="text-end">
+            <button class="btn btn-icon-edit" title="Editar" onclick="openEditUser(${u.cedula})"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-icon-delete" title="Eliminar" onclick="confirmDelete(${u.cedula})"><i class="bi bi-trash"></i></button>
+          </td>
+        </tr>`).join('');
+    }
+
+    async function loadUsers() {
+      try {
+        users = await apiFetch('/users');
+        renderUsers();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+    loadUsers();
 
     function filterUsers() {
       const q = document.getElementById('searchUsers').value.toLowerCase();
@@ -266,32 +291,78 @@
     }
 
     function openNewUser() {
+      editingCedula = null;
       document.getElementById('userModalTitle').innerHTML =
         '<i class="bi bi-person-plus me-2 text-primary"></i>Nuevo usuario';
       document.getElementById('userForm').reset();
+      document.getElementById('cedulaWrap').style.display   = '';
+      document.getElementById('userCedula').disabled        = false;
       document.getElementById('passwordWrap').style.display = '';
     }
 
-    function openEditUser(name, email, role) {
+    function openEditUser(cedula) {
+      const u = users.find(x => x.cedula === cedula);
+      if (!u) return;
+      editingCedula = cedula;
       document.getElementById('userModalTitle').innerHTML =
         '<i class="bi bi-pencil-square me-2 text-primary"></i>Editar usuario';
-      document.getElementById('userName').value  = name;
-      document.getElementById('userEmail').value = email;
-      document.getElementById('userRole').value  = role;
+      document.getElementById('userCedula').value   = u.cedula;
+      document.getElementById('userCedula').disabled = true;
+      document.getElementById('userName').value     = u.name;
+      document.getElementById('userUsername').value = u.username;
+      document.getElementById('userEmail').value    = u.email;
+      document.getElementById('userRole').value     = u.role;
       document.getElementById('passwordWrap').style.display = 'none';
       new bootstrap.Modal(document.getElementById('userModal')).show();
     }
 
-    function confirmDelete(name, email) {
-      const currentEmail = (typeof getEmail === 'function') ? getEmail() : null;
-      if (email === currentEmail) {
+    document.getElementById('saveUserBtn').onclick = async () => {
+      const cedula   = document.getElementById('userCedula').value.trim();
+      const name     = document.getElementById('userName').value.trim();
+      const usernameV = document.getElementById('userUsername').value.trim();
+      const email    = document.getElementById('userEmail').value.trim();
+      const password = document.getElementById('userPassword').value;
+      const role     = document.getElementById('userRole').value;
+      const btn      = document.getElementById('saveUserBtn');
+
+      try {
+        btn.disabled = true;
+        if (editingCedula === null) {
+          await apiFetch('/users', {
+            method: 'POST',
+            body: JSON.stringify({ cedula: Number(cedula), name, username: usernameV, email, password, role }),
+          });
+        } else {
+          await apiFetch(`/users/${editingCedula}`, {
+            method: 'PUT',
+            body: JSON.stringify({ name, username: usernameV, email, role }),
+          });
+        }
+        bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
+        await loadUsers();
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    function confirmDelete(cedula) {
+      const u = users.find(x => x.cedula === cedula);
+      if (!u) return;
+      if (u.email === getEmail()) {
         alert('No puedes eliminar tu propia cuenta.');
         return;
       }
-      document.getElementById('deleteUserName').textContent = name;
-      document.getElementById('confirmDeleteBtn').onclick = () => {
-        document.querySelector(`tr[data-email="${email}"]`)?.remove();
-        bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+      document.getElementById('deleteUserName').textContent = u.name;
+      document.getElementById('confirmDeleteBtn').onclick = async () => {
+        try {
+          await apiFetch(`/users/${cedula}`, { method: 'DELETE' });
+          bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+          await loadUsers();
+        } catch (err) {
+          alert(err.message);
+        }
       };
       new bootstrap.Modal(document.getElementById('deleteModal')).show();
     }
