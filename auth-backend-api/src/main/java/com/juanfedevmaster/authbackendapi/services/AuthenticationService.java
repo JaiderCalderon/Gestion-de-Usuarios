@@ -20,8 +20,12 @@ public class AuthenticationService implements IAuthenticationService {
         User user = userRepository.findByEmail(authRequest.getEmail())
                 .orElseThrow(() -> new InvalidCredentialsException("Incorrect email or password"));
 
-        if (!passwordEncoder.matches(authRequest.getPassword(), user.getPasswordHash()))
+        if (!passwordEncoder.matches(authRequest.getPassword(), user.getPassword()))
             throw new InvalidCredentialsException("Incorrect email or password");
+
+        // Update last login timestamp
+        user.setLastLogin(java.time.LocalDateTime.now());
+        userRepository.save(user);
 
         return true;
     }
