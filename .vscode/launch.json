@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch AuthBackendApiApplication",
+            "request": "launch",
+            "mainClass": "com.juanfedevmaster.authbackendapi.AuthBackendApiApplication",
+            "projectName": "auth-backend-api",
+            "cwd": "${workspaceFolder}/auth-backend-api",
+            "envFile": "${workspaceFolder}/auth-backend-api/.env"
+        }
+    ]
+}

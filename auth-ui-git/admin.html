@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,8 +15,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <!-- Custom styles -->
   <link rel="stylesheet" href="css/main.css" />
-    <link rel="stylesheet" href="css/admin.css" />
+  <link rel="stylesheet" href="css/admin.css" />
 </head>
+
 <body class="dashboard-body">
 
   <!-- Navbar -->
@@ -58,8 +60,8 @@
                 <i class="bi bi-people-fill"></i>
               </div>
               <div>
-                <div class="text-muted" style="font-size:.8rem;">Usuarios activos</div>
-                <div class="fw-bold fs-4">1,284</div>
+                <div class="text-muted" style="font-size:.8rem;">Usuarios registrados</div>
+                <div class="fw-bold fs-4" id="statUserCount">—</div>
               </div>
             </div>
           </div>
@@ -69,11 +71,11 @@
           <div class="card stat-card p-3">
             <div class="d-flex align-items-center gap-3">
               <div class="card-icon icon-success">
-                <i class="bi bi-check-circle-fill"></i>
+                <i class="bi bi-shield-check-fill"></i>
               </div>
               <div>
-                <div class="text-muted" style="font-size:.8rem;">Sesiones hoy</div>
-                <div class="fw-bold fs-4">347</div>
+                <div class="text-muted" style="font-size:.8rem;">Sesión Activa</div>
+                <div class="fw-bold fs-4 text-success">Admin</div>
               </div>
             </div>
           </div>
@@ -115,7 +117,8 @@
           <h6 class="fw-bold mb-0">
             <i class="bi bi-people me-2 text-primary"></i>Usuarios registrados
           </h6>
-          <button class="btn btn-primary-custom" style="width:auto; padding:.5rem 1rem;" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openNewUser()">
+          <button class="btn btn-primary-custom" style="width:auto; padding:.5rem 1rem;" data-bs-toggle="modal"
+            data-bs-target="#userModal" onclick="openNewUser()">
             <i class="bi bi-plus-lg me-1"></i>Nuevo usuario
           </button>
         </div>
@@ -124,13 +127,8 @@
           <span class="input-group-text bg-white border-end-0">
             <i class="bi bi-search text-muted"></i>
           </span>
-          <input
-            type="text"
-            id="searchUsers"
-            class="form-control border-start-0"
-            placeholder="Buscar por nombre o correo..."
-            onkeyup="filterUsers()"
-          />
+          <input type="text" id="searchUsers" class="form-control border-start-0"
+            placeholder="Buscar por nombre o correo..." onkeyup="filterUsers()" />
         </div>
 
         <div class="table-responsive">
@@ -197,7 +195,8 @@
         </div>
         <div class="modal-footer border-0">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary-custom" style="width:auto; padding:.5rem 1.25rem;" id="saveUserBtn">Guardar</button>
+          <button type="button" class="btn btn-primary-custom" style="width:auto; padding:.5rem 1.25rem;"
+            id="saveUserBtn">Guardar</button>
         </div>
       </div>
     </div>
@@ -214,7 +213,8 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <p class="mb-0">¿Seguro que deseas eliminar a <strong id="deleteUserName">—</strong>? Esta acción no se puede deshacer.</p>
+          <p class="mb-0">¿Seguro que deseas eliminar a <strong id="deleteUserName">—</strong>? Esta acción no se puede
+            deshacer.</p>
         </div>
         <div class="modal-footer border-0">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -237,10 +237,10 @@
     requireAdmin();
 
     const username = getUsername();
-    document.getElementById('navUsername').textContent  = username;
+    document.getElementById('navUsername').textContent = username;
     document.getElementById('heroUsername').textContent = username;
     document.getElementById('infoUsername').textContent = username;
-    document.getElementById('loginTime').textContent    = new Date().toLocaleString('es-CO');
+    document.getElementById('loginTime').textContent = new Date().toLocaleString('es-CO');
 
     let users = [];          // cache de usuarios cargados
     let editingCedula = null; // null = creando, valor = editando
@@ -277,6 +277,8 @@
       try {
         users = await apiFetch('/users');
         renderUsers();
+        const counter = document.getElementById('statUserCount');
+        if (counter) counter.textContent = users.length;
       } catch (err) {
         alert(err.message);
       }
@@ -295,8 +297,8 @@
       document.getElementById('userModalTitle').innerHTML =
         '<i class="bi bi-person-plus me-2 text-primary"></i>Nuevo usuario';
       document.getElementById('userForm').reset();
-      document.getElementById('cedulaWrap').style.display   = '';
-      document.getElementById('userCedula').disabled        = false;
+      document.getElementById('cedulaWrap').style.display = '';
+      document.getElementById('userCedula').disabled = false;
       document.getElementById('passwordWrap').style.display = '';
     }
 
@@ -306,24 +308,24 @@
       editingCedula = cedula;
       document.getElementById('userModalTitle').innerHTML =
         '<i class="bi bi-pencil-square me-2 text-primary"></i>Editar usuario';
-      document.getElementById('userCedula').value   = u.cedula;
+      document.getElementById('userCedula').value = u.cedula;
       document.getElementById('userCedula').disabled = true;
-      document.getElementById('userName').value     = u.name;
+      document.getElementById('userName').value = u.name;
       document.getElementById('userUsername').value = u.username;
-      document.getElementById('userEmail').value    = u.email;
-      document.getElementById('userRole').value     = u.role;
+      document.getElementById('userEmail').value = u.email;
+      document.getElementById('userRole').value = u.role;
       document.getElementById('passwordWrap').style.display = 'none';
       new bootstrap.Modal(document.getElementById('userModal')).show();
     }
 
     document.getElementById('saveUserBtn').onclick = async () => {
-      const cedula   = document.getElementById('userCedula').value.trim();
-      const name     = document.getElementById('userName').value.trim();
+      const cedula = document.getElementById('userCedula').value.trim();
+      const name = document.getElementById('userName').value.trim();
       const usernameV = document.getElementById('userUsername').value.trim();
-      const email    = document.getElementById('userEmail').value.trim();
+      const email = document.getElementById('userEmail').value.trim();
       const password = document.getElementById('userPassword').value;
-      const role     = document.getElementById('userRole').value;
-      const btn      = document.getElementById('saveUserBtn');
+      const role = document.getElementById('userRole').value;
+      const btn = document.getElementById('saveUserBtn');
 
       try {
         btn.disabled = true;
@@ -368,4 +370,5 @@
     }
   </script>
 </body>
+
 </html>
