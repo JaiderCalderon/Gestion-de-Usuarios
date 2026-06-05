@@ -280,7 +280,7 @@
         const counter = document.getElementById('statUserCount');
         if (counter) counter.textContent = users.length;
       } catch (err) {
-        alert(err.message);
+        mostrarAlerta(err.message, 'error');
       }
     }
     loadUsers();
@@ -343,7 +343,7 @@
         bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
         await loadUsers();
       } catch (err) {
-        alert(err.message);
+        mostrarAlerta(err.message, 'error');
       } finally {
         btn.disabled = false;
       }
@@ -353,7 +353,7 @@
       const u = users.find(x => x.cedula === cedula);
       if (!u) return;
       if (u.email === getEmail()) {
-        alert('No puedes eliminar tu propia cuenta.');
+        mostrarAlerta('No puedes eliminar tu propia cuenta.', 'error');
         return;
       }
       document.getElementById('deleteUserName').textContent = u.name;
@@ -363,7 +363,7 @@
           bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
           await loadUsers();
         } catch (err) {
-          alert(err.message);
+          mostrarAlerta(err.message, 'error');
         }
       };
       new bootstrap.Modal(document.getElementById('deleteModal')).show();

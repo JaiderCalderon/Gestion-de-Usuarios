@@ -202,7 +202,7 @@
         user = await apiFetch('/users/me');
         paint();
       } catch (err) {
-        alert(err.message);
+        mostrarAlerta(err.message, 'error');
       }
     }
     loadAccount();
@@ -231,7 +231,7 @@
         });
 
         if (newPwd) {
-          if (!current) { alert('Ingresa tu contraseña actual para cambiarla.'); btn.disabled = false; return; }
+          if (!current) { mostrarAlerta('Ingresa tu contraseña actual para cambiarla.', 'error'); btn.disabled = false; return; }
           await apiFetch('/users/me/password', {
             method: 'PUT',
             body: JSON.stringify({ currentPassword: current, newPassword: newPwd }),
@@ -243,7 +243,7 @@
         paint();
         bootstrap.Modal.getInstance(document.getElementById('profileModal')).hide();
       } catch (err) {
-        alert(err.message);
+        mostrarAlerta(err.message, 'error');
       } finally {
         btn.disabled = false;
       }
@@ -259,7 +259,7 @@
         await apiFetch('/users/me', { method: 'DELETE' });
         logout();
       } catch (err) {
-        alert(err.message);
+        mostrarAlerta(err.message, 'error');
       }
     };
   </script>
