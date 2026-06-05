@@ -98,6 +98,40 @@ async function apiFetch(path, options = {}) {
 }
 
 /* ---------------------------------------------------------------- UI utils --- */
+/* ===== Alerta personalizada (reemplazo de alert) ===== */
+function mostrarAlerta(mensaje, tipo = 'info') {
+  let overlay = document.getElementById('alertaOverlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'alertaOverlay';
+    overlay.className = 'alerta-overlay';
+    overlay.innerHTML = `
+      <div class="alerta-box">
+        <div class="alerta-icon" id="alertaIcon"></div>
+        <p class="alerta-msg" id="alertaMsg"></p>
+        <button type="button" class="btn btn-primary-custom" id="alertaBtn">Aceptar</button>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    const cerrar = () => overlay.classList.remove('show');
+    overlay.querySelector('#alertaBtn').addEventListener('click', cerrar);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrar(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('show')) cerrar();
+    });
+  }
+
+  const icons = {
+    info:    '<i class="bi bi-info-circle-fill"></i>',
+    success: '<i class="bi bi-check-circle-fill"></i>',
+    error:   '<i class="bi bi-exclamation-triangle-fill"></i>',
+  };
+  const icon = overlay.querySelector('#alertaIcon');
+  icon.className = 'alerta-icon ' + (icons[tipo] ? tipo : 'info');
+  icon.innerHTML = icons[tipo] || icons.info;
+  overlay.querySelector('#alertaMsg').textContent = mensaje;
+  overlay.classList.add('show');
+}
 
 function togglePassword(inputId, btnId) {
   const input = document.getElementById(inputId);
@@ -120,14 +154,6 @@ function initials(name) {
     .toUpperCase();
 }
 
-function showAlert(id, message, type = 'danger') {
-  const box = document.getElementById(id);
-  if (!box) return;
-  box.className = `alert alert-${type} mb-3`;
-  box.textContent = message;
-  box.style.display = 'block';
-}
-
 /* -------------------------------------------------------------- Auth flows --- */
 
 async function handleLogin(event) {
@@ -145,7 +171,7 @@ async function handleLogin(event) {
     saveSession(auth);
     redirectByRole();
   } catch (err) {
-    showAlert('loginAlert', err.message || 'No se pudo iniciar sesión.');
+    mostrarAlerta(err.message || 'No se pudo iniciar sesión.', 'error');
   } finally {
     if (btn) btn.disabled = false;
   }
@@ -162,7 +188,7 @@ async function handleRegister(event) {
   const btn = document.getElementById('registerBtn');
 
   if (password !== confirm) {
-    showAlert('registerAlert', 'Las contraseñas no coinciden.');
+    mostrarAlerta('Las contraseñas no coinciden.', 'error');
     return;
   }
 
@@ -172,10 +198,10 @@ async function handleRegister(event) {
       method: 'POST',
       body: JSON.stringify({ cedula: Number(cedula), name, username, email, password }),
     });
-    showAlert('registerAlert', 'Cuenta creada. Redirigiendo a iniciar sesión…', 'success');
+    mostrarAlerta('Cuenta creada. Redirigiendo a iniciar sesión…', 'success');
     setTimeout(() => (window.location.href = 'index.html'), 1200);
   } catch (err) {
-    showAlert('registerAlert', err.message || 'No se pudo crear la cuenta.');
+    mostrarAlerta(err.message || 'No se pudo crear la cuenta.', 'error');
   } finally {
     if (btn) btn.disabled = false;
   }
